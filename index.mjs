@@ -121,9 +121,11 @@ function getLernerData(assigment,list, dueDates) {
                 
             }
             let cellAvg = (cell.submission.score - penallty) / assigment[cell.assignment_id]
+            cellAvg = Number(cellAvg.toFixed(3));
+            
             //then add it tot total
-            avg += cellAvg
-            counter++
+            avg += cell.submission.score - penallty
+            counter += assigment[cell.assignment_id]
 
             if (student["id"] === cell.learner_id) {
                 student[`${cell.assignment_id}`] = cellAvg
@@ -132,7 +134,7 @@ function getLernerData(assigment,list, dueDates) {
                 student[`${cell.assignment_id}`] = cellAvg
                 continue
             }
-                student["avg"] = avg / counter
+                student["avg"] = Number((avg / counter).toFixed(3))
                 studentsArr.push(student)
                 student = {}
                 avg = 0
