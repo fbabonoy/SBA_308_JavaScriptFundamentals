@@ -30,9 +30,6 @@ const AssignmentGroup = {
             points_possible: 500,
         },
     ],
-    //what is the total of assignemts
-    // what assigment are dues
-    // i need to get an arary with the id that are due[]
 };
 
 function getNumberOfIdsDue(arr) {
@@ -47,10 +44,10 @@ function getNumberOfIdsDue(arr) {
         return false
 
     })
-    
+
     let object = {}
-    for (let cell of filtered) {
-        object[`${cell.id}`] = cell.points_possible
+    for (let cell in filtered) {
+        object[`${filtered[cell].id}`] = filtered[cell].points_possible
     }
 
     return [object, dates]
@@ -76,6 +73,7 @@ const LearnerSubmissions = [
         },
     },
     {
+
         learner_id: 125,
         assignment_id: 3,
         submission: {
@@ -101,63 +99,63 @@ const LearnerSubmissions = [
     },
 ];
 
-function getLernerData(assigment,list, dueDates) {
+function getLearnerSubmissions(assigment, list, dueDates) {
     let student = {}
     let studentsArr = []
     let avg = 0
     let counter = 0
-    
+
     for (let cell of list) {
         if (assigment[cell.assignment_id]) {
-            //get the agberage of current the assign
-            // console.log(cell.submission.score)
-            // console.log(assigment[cell.assignment_id])
             let penallty = 0
             let submissionDate = new Date(cell.submission.submitted_at)
-            // console.log(submissionDate);
-            
+
             if (submissionDate > dueDates[cell.assignment_id - 1]) {
                 penallty = 15
-                
             }
+
             let cellAvg = (cell.submission.score - penallty) / assigment[cell.assignment_id]
             cellAvg = Number(cellAvg.toFixed(3));
-            
-            //then add it tot total
+
             avg += cell.submission.score - penallty
             counter += assigment[cell.assignment_id]
 
             if (student["id"] === cell.learner_id) {
                 student[`${cell.assignment_id}`] = cellAvg
-            } else {                
+            } else {
                 student["id"] = cell.learner_id
                 student[`${cell.assignment_id}`] = cellAvg
                 continue
             }
-                student["avg"] = Number((avg / counter).toFixed(3))
-                studentsArr.push(student)
-                student = {}
-                avg = 0
-                counter = 0
-            }
-        
+            student["avg"] = Number((avg / counter).toFixed(3))
+            studentsArr.push(student)
+            student = {}
+            avg = 0
+            counter = 0
+        }
+
     }
 
     // console.log(studentsArr);
     return studentsArr
-    
+
 }
 
 function getLearnerData(course, ag, submissions) {
     // here, we would process this data to achieve the desired result.
+    let finalResult
 
-    let [assignemts, dueDates] = getNumberOfIdsDue(ag)
-    // console.log(assignemts)
-    // console.log(dateArray)
+    try {
+        if (course.id === ag.course_id) {
+            let [assignemts, dueDates] = getNumberOfIdsDue(ag)
+            finalResult = getLearnerSubmissions(assignemts, submissions, dueDates);
+        } else {
+            throw new Error("no data found😂")
+        }
+    } catch (e) {
+        console.error(e)
+    }
 
-    let LearnerSubmissions = getLernerData(assignemts, submissions, dueDates)
-    console.log(LearnerSubmissions)
-    
     const result = [
         {
             id: 125,
@@ -172,8 +170,9 @@ function getLearnerData(course, ag, submissions) {
             2: 0.833, // late: (140 - 15) / 150
         },
     ];
+    console.log(result);
 
-    return result;
+    return finalResult
 }
 
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
@@ -182,18 +181,43 @@ console.log(result);
 
 
 
-// {
-// // the ID of the learner for which this data has been collected
-// "id": number,
-//     // the learner’s total, weighted average, in which assignments
-//     // with more points_possible should be counted for more
-//     // e.g. a learner with 50/100 on one assignment and 190/200 on another
-//     // would have a weighted average score of 240/300 = 80%.
-//     "avg": number,
-//         // each assignment should have a key with its ID,
-//         // and the value associated with it should be the percentage that
-//         // the learner scored on the assignment (submission.score / points_possible)
-//         <assignment_id>: number,
-// // if an assignment is not yet due, it should not be included in either
-// // the average or the keyed dictionary of scores
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// let students = ["adam", "joseph", "mary", "john"]
+// let grades = [1, 7, 9, 5]
+
+
+// students.forEach((student, index, array) => {
+//     try {
+//         if (array.length === grades.length) {
+//             console.log(`${student} grade is ${grades[index]}`)
+//         } else {
+//             throw new Error("out of index")
+//         } 
+//     } catch (e) {
+//             console.error(e)
+//         }
+//     }
+// )
+
+
+// let newArray = students.map((student, index)=> `${student} is a student in perscholas and their grade is ${grades[index]}`)
+
+//     //adam is a student in perscholas //joseph is student in perscholas //mary is student in perscholas //john is student in perscholas console.log(newArray)
