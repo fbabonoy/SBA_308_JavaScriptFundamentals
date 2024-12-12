@@ -150,7 +150,7 @@ function getLearnerData(course, ag, submissions) {
             let [assignemts, dueDates] = getNumberOfIdsDue(ag)
             finalResult = getLearnerSubmissions(assignemts, submissions, dueDates);
         } else {
-            throw new Error("no data found😂")
+            throw new Error("no data found")
         }
     } catch (e) {
         console.error(e)
@@ -178,46 +178,3 @@ function getLearnerData(course, ag, submissions) {
 const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
 
 console.log(result);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// let students = ["adam", "joseph", "mary", "john"]
-// let grades = [1, 7, 9, 5]
-
-
-// students.forEach((student, index, array) => {
-//     try {
-//         if (array.length === grades.length) {
-//             console.log(`${student} grade is ${grades[index]}`)
-//         } else {
-//             throw new Error("out of index")
-//         } 
-//     } catch (e) {
-//             console.error(e)
-//         }
-//     }
-// )
-
-
-// let newArray = students.map((student, index)=> `${student} is a student in perscholas and their grade is ${grades[index]}`)
-
-//     //adam is a student in perscholas //joseph is student in perscholas //mary is student in perscholas //john is student in perscholas console.log(newArray)
