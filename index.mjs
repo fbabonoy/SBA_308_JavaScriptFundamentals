@@ -99,26 +99,26 @@ const LearnerSubmissions = [
     },
 ];
 
-function getLearnerSubmissions(assigment, list, dueDates) {
+function getLearnerSubmissions(assignment, list, dueDates) {
     let student = {}
     let studentsArr = []
     let avg = 0
     let counter = 0
 
     for (let cell of list) {
-        if (assigment[cell.assignment_id]) {
-            let penallty = 0
+        if (assignment[cell.assignment_id]) {
+            let penalty = 0
             let submissionDate = new Date(cell.submission.submitted_at)
 
             if (submissionDate > dueDates[cell.assignment_id - 1]) {
-                penallty = 15
+                penalty = 15
             }
 
-            let cellAvg = (cell.submission.score - penallty) / assigment[cell.assignment_id]
+            let cellAvg = (cell.submission.score - penalty) / assignment[cell.assignment_id]
             cellAvg = Number(cellAvg.toFixed(3));
 
-            avg += cell.submission.score - penallty
-            counter += assigment[cell.assignment_id]
+            avg += cell.submission.score - penalty
+            counter += assignment[cell.assignment_id]
 
             if (student["id"] === cell.learner_id) {
                 student[`${cell.assignment_id}`] = cellAvg
@@ -147,8 +147,8 @@ function getLearnerData(course, ag, submissions) {
 
     try {
         if (course.id === ag.course_id) {
-            let [assignemts, dueDates] = getNumberOfIdsDue(ag)
-            finalResult = getLearnerSubmissions(assignemts, submissions, dueDates);
+            let [assignments, dueDates] = getNumberOfIdsDue(ag)
+            finalResult = getLearnerSubmissions(assignments, submissions, dueDates);
         } else {
             throw new Error("no data found")
         }
