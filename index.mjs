@@ -44,7 +44,7 @@ function getAssignmentFor(curriculum, targetDate) {
     return [dates, assignmentData]
 }
 
-function getAssignmentsFor(dates) {
+function getAssignmentScoresFor(dates) {
     let object = {}
     for (let cell in dates) {
         object[`${dates[cell].id}`] = dates[cell].points_possible
@@ -104,19 +104,17 @@ function generateStudentsReports(assignments, list, dueDates) {
     let avg = 0
     let totalPossiblePoints = 0
 
-    for (let cell of list) {        
+    for (let cell of list) {    
+
         let assignmentScore = assignments[cell.assignment_id]
+        
         if (assignmentScore) {
-            let penalty = 0
-            let submissionDate = new Date(cell.submission.submitted_at)
             
-            if (submissionDate > dueDates[cell.assignment_id - 1]) {
-                penalty = 15
-            }
-
+            let submissionDate = new Date(cell.submission.submitted_at)
+            let penalty = submissionDate > dueDates[cell.assignment_id - 1] ? 15 : 0
             let cellAvg = (cell.submission.score - penalty) / assignmentScore
-            cellAvg = Number(cellAvg.toFixed(3));
 
+            cellAvg = Number(cellAvg.toFixed(3));
             avg += cell.submission.score - penalty
             totalPossiblePoints += assignmentScore
 
@@ -129,8 +127,8 @@ function generateStudentsReports(assignments, list, dueDates) {
             }
 
             student["avg"] = Number((avg / totalPossiblePoints).toFixed(3))
-            
             studentsArr.push(student)
+
             student = {}
             avg = 0
             totalPossiblePoints = 0
@@ -150,7 +148,7 @@ function getLearnerData(course, curriculum, submissions, targetDate = new Date) 
     try {
         if (course.id === curriculum.course_id) {
             let [dueDates, assignmentData] = getAssignmentFor(curriculum, targetDate)
-            let assignmentScores = getAssignmentsFor(assignmentData)
+            let assignmentScores = getAssignmentScoresFor(assignmentData)
             studentsReports = generateStudentsReports(assignmentScores, submissions, dueDates);
             
         } else {
